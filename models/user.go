@@ -52,7 +52,6 @@ func (m UserRepository) GetByID(number int) *User {
 	defer db.Close()
 
 	user := User{}
-	user.Number = number
-	db.First(&user)
+	db.Where("number = ?", number).First(&user)
 	return &user
 }
