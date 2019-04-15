@@ -46,12 +46,46 @@ func NewUserRepository() UserRepository {
 	return UserRepository{}
 }
 
-// GetByID ...
-func (m UserRepository) GetByID(number int) *User {
+// Create ...
+func (m UserRepository) Create(number int, name string) *User {
+	db := gormConnect()
+	defer db.Close()
+
+	user := User{Number: number, Name: name}
+	db.Create(&user)
+	return &user
+}
+
+// Read ...
+func (m UserRepository) Read(number int) *User {
 	db := gormConnect()
 	defer db.Close()
 
 	user := User{}
 	db.Where("number = ?", number).First(&user)
+	return &user
+}
+
+// Update ...
+func (m UserRepository) Update(origin int, changed int, name string) *User {
+	db := gormConnect()
+	defer db.Close()
+
+	user := User{}
+	db.Where("number = ?", origin).First(&user)
+	user.Number = changed
+	user.Name = name
+	db.Save(&user)
+	return &user
+}
+
+// Delete ...
+func (m UserRepository) Delete(number int) *User {
+	db := gormConnect()
+	defer db.Close()
+
+	user := User{}
+	db.Where("number = ?", number).First(&user)
+	db.Delete(&user)
 	return &user
 }
